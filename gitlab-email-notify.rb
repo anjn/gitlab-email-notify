@@ -64,12 +64,9 @@ mail_body += "----
 This email is delivered by GitLab Web Hook."
 
 # get team member & send mail
-Gitlab.team_members(project.id).each do |user|
-  mail = Mail.new do
-    to user.email
-    from MAIL_FROM
-    subject mail_subject
-    body mail_body
-  end
-  mail.deliver!
+Mail.deliver do
+  to Gitlab.team_members(project.id).map {|user| user.email }
+  from MAIL_FROM
+  subject mail_subject
+  body mail_body
 end

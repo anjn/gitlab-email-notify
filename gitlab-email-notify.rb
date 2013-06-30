@@ -41,15 +41,15 @@ mail_body =
  - #{project_url}
 
 * Commit info
-"
-
-push_info['commits'].each do |commit|
+" +
+push_info['commits'].map {|commit|
   author = commit['author']
-  mail_body += " - by #{author['name']} <#{author['email']}>\n"
-  mail_body += "   #{commit['message']}\n\n"
-end
+" - by #{author['name']} <#{author['email']}>
+   #{commit['message']}
 
-mail_body += "----
+"
+}.join('') +
+"----
 This email is delivered by GitLab Web Hook."
 
 # get team member & send mail

@@ -9,18 +9,6 @@ GITLAB_URL = 'http://FIXME/'
 GITLAB_TOKEN = 'FIXME'
 MAIL_FROM = 'FIXME'
 
-Mail.defaults do
-  delivery_method :smtp, {
-    :enable_starttls_auto => true,
-    :address => "smtp.gmail.com",
-    :port => 587,
-    :domain => "gmail.com",
-    :authentication => :plain,
-    :user_name => "FIXME",
-    :password => "FIXME",
-  }
-end
-
 # cgi
 cgi = CGI.new
 print "Content-type: text/html\n\n"
@@ -65,6 +53,15 @@ This email is delivered by GitLab Web Hook."
 
 # get team member & send mail
 Mail.deliver do
+  delivery_method :smtp, {
+    :enable_starttls_auto => true,
+    :address => "smtp.gmail.com",
+    :port => 587,
+    :domain => "gmail.com",
+    :authentication => :plain,
+    :user_name => "FIXME",
+    :password => "FIXME",
+  }
   to Gitlab.team_members(project.id).map {|user| user.email }
   from MAIL_FROM
   subject mail_subject

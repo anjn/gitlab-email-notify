@@ -7,7 +7,7 @@ require "mail"
 # config
 GITLAB_URL = 'http://FIXME/'
 GITLAB_TOKEN = 'FIXME'
-MAIL_FROM = 'FIXME'
+MAIL_SENDER = 'FIXME'
 
 # cgi
 cgi = CGI.new
@@ -33,6 +33,7 @@ exit if project.nil?
 
 # mail contents
 mail_subject = "GitLab | #{project_name} | notify"
+mail_from = "#{push_info['author']} <#{Gitlab.user(push_info['user_id']).email}>"
 mail_body = 
 "#{push_info['user_name']} pushed new commits to #{project_name}.
 
@@ -63,7 +64,8 @@ Mail.deliver do
     :password => "FIXME",
   }
   to Gitlab.team_members(project.id).map {|user| user.email }
-  from MAIL_FROM
+  sender MAIL_SENDER
+  from mail_from
   subject mail_subject
   body mail_body
 end

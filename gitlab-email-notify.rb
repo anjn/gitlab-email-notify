@@ -8,6 +8,8 @@ require "mail"
 GITLAB_URL = 'http://FIXME/'
 GITLAB_TOKEN = 'FIXME'
 MAIL_SENDER = 'FIXME'
+GOOGLE_USERNAME = 'FIXME'
+GOOGLE_PASSWORD = 'FIXME'
 
 # cgi
 cgi = CGI.new
@@ -32,8 +34,6 @@ end
 exit if project.nil?
 
 # mail contents
-mail_subject = "GitLab | #{project_name} | notify"
-mail_from = "#{push_info['author']} <#{Gitlab.user(push_info['user_id']).email}>"
 mail_body = 
 "#{push_info['user_name']} pushed new commits to #{project_name}.
 
@@ -60,12 +60,12 @@ Mail.deliver do
     :port => 587,
     :domain => "gmail.com",
     :authentication => :plain,
-    :user_name => "FIXME",
-    :password => "FIXME",
+    :user_name => GOOGLE_USERNAME,
+    :password => GOOGLE_PASSWORD,
   }
   to Gitlab.team_members(project.id).map {|user| user.email }
   sender MAIL_SENDER
-  from mail_from
-  subject mail_subject
+  from "#{push_info['author']} <#{Gitlab.user(push_info['user_id']).email}>"
+  subject "GitLab | #{project_name} | notify"
   body mail_body
 end

@@ -3,6 +3,7 @@ require "cgi"
 require "json"
 require "gitlab"
 require "mail"
+require "date"
 
 # config
 GITLAB_URL = 'http://FIXME/'
@@ -37,19 +38,26 @@ exit if project.nil?
 mail_body = 
 "#{push_info['user_name']} pushed new commits to #{project_name}.
 
-* Project page
- - #{project_url}
+  Branch: #{push_info['ref']}
+  home:   #{project_url}
 
-* Commit info
 " +
 push_info['commits'].map {|commit|
   author = commit['author']
-" - by #{author['name']} <#{author['email']}>
-   #{commit['message']}
+"  Commit: #{commit['id']}:
+      #{commit['url']}:
+  Author: #{author['name']} <#{author['email']}>
+  Date:   #{DateTime.parse(commit['timestamp']).strftime('%Y-%m-%d (%a, %-d %b %Y)')}
+  Log Message:
+  -----------
+  #{commit['message']}
+
 
 "
 }.join('') +
-"----
+"Compare: #{project_url}/compare/#{push_info['before']}...#{push_info['after']}
+
+----
 This email is delivered by GitLab Web Hook."
 
 # get team member & send mail

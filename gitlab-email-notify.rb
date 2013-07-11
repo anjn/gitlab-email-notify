@@ -3,21 +3,23 @@ require "cgi"
 require "json"
 require "gitlab"
 require "mail"
+require "dotenv"
+Dotenv.load
 
 # config
-GITLAB_URL = 'http://FIXME/'
-GITLAB_TOKEN = 'FIXME'
-MAIL_FROM = 'FIXME'
+GITLAB_URL = ENV['GITLAB_URL']
+GITLAB_TOKEN = ENV['GITLAB_TOKEN']
+MAIL_FROM = ENV['MAIL_FROM']
 
 Mail.defaults do
   delivery_method :smtp, {
     :enable_starttls_auto => true,
-    :address => "smtp.gmail.com",
-    :port => 587,
-    :domain => "gmail.com",
+    :address => ENV['SMTP_ADDRESS'],
+    :port => ENV['SMTP_PORT'].to_i,
+    :domain => ENV['SMTP_DOMAIN'],
     :authentication => :plain,
-    :user_name => "FIXME",
-    :password => "FIXME",
+    :user_name => ENV['MAIL_USERNAME'],
+    :password => ENV['MAIL_PASSWORD']
   }
 end
 

@@ -63,7 +63,6 @@ def send_mail(push_body)
   # [access level] guest: 10, reporter: 20, developer: 30, master: 40
   developers = Gitlab.team_members(project.id)
     .select { |user| user.access_level >= 30 }
-    .select { |user| user.email == 's-kagawa@m3.com' }
     .map { |user| user.email }
 
   # send mail

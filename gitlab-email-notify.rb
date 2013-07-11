@@ -39,6 +39,24 @@ def send_mail(push_body)
 
   # mail contents
   mail_subject = "GitLab | #{project_name} | notify"
+  mail_body = generate_mail_body(project_url, push_info)
+
+  # get team members
+  # [access level] guest: 10, reporter: 20, developer: 30, master: 40
+  developers = Gitlab.team_members(project.id)
+    .select { |user| user.access_level >= 30 }
+    .map { |user| user.email }
+
+  # send mail
+  Mail.deliver do
+    to developers
+    from MAIL_FROM
+    subject mail_subject
+    body mail_body
+  end
+end
+
+def generate_mail_body(project_url, push_info)
   mail_body = <<-MAIL_BODY
 #{push_info['user_name']} pushed new commits to #{push_info['ref']} at #{project_name}.
 
@@ -59,19 +77,7 @@ def send_mail(push_body)
   mail_body += "----
   This email is delivered by GitLab Web Hook."
 
-  # get team members
-  # [access level] guest: 10, reporter: 20, developer: 30, master: 40
-  developers = Gitlab.team_members(project.id)
-    .select { |user| user.access_level >= 30 }
-    .map { |user| user.email }
-
-  # send mail
-  Mail.deliver do
-    to developers
-    from MAIL_FROM
-    subject mail_subject
-    body mail_body
-  end
+  mail_body
 end
 
 post '/' do

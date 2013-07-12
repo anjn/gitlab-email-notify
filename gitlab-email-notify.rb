@@ -42,9 +42,9 @@ def send_mail(push_body)
   mail_body = generate_mail_body(project_name, project_url, push_info)
 
   # get team members
-  # [access level] guest: 10, reporter: 20, developer: 30, master: 40
+  ignore_list = (params['ignore'] || '').split(',')
   developers = Gitlab.team_members(project.id)
-    .select { |user| user.access_level >= 30 }
+    .reject { |user| ignore_list.include?(user.email) }
     .map { |user| user.email }
 
   # send mail

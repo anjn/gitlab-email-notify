@@ -39,7 +39,7 @@ def send_mail(push_body)
 
   # mail contents
   mail_subject = "GitLab | #{project_name} | notify"
-  mail_body = generate_mail_body(project_url, push_info)
+  mail_body = generate_mail_body(project_name, project_url, push_info)
 
   # get team members
   # [access level] guest: 10, reporter: 20, developer: 30, master: 40
@@ -56,7 +56,7 @@ def send_mail(push_body)
   end
 end
 
-def generate_mail_body(project_url, push_info)
+def generate_mail_body(project_name, project_url, push_info)
   mail_body = <<-MAIL_BODY
 #{push_info['user_name']} pushed new commits to #{push_info['ref']} at #{project_name}.
 

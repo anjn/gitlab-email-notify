@@ -1,5 +1,6 @@
 :mail:
-  :from: s-kagawa@m3.com
+  :from: nobody@example.com
+  :to: optional-mailing-list-to@example.com
   :delivery:
     :method: :smtp
     :options:
@@ -11,6 +12,6 @@
       :user_name: FIXME
       :password: FIXME
 :gitlab:
-  :url: https://rendezvous.m3.com/
-  :token: ZBBy4P4vzdC5ewL4WEQK
+  :url: https://gitlab.example.com/
+  :token: ZZZZZZZZZZFIXMEZZZZZ
 

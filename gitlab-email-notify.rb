@@ -1,5 +1,4 @@
 #!/usr/bin/env ruby
-##require "cgi"
 require "date"
 require 'json'
 require 'gitlab'
@@ -14,6 +13,7 @@ config = YAML::load(File.read(config_path))
 GITLAB_URL = config[:gitlab][:url]
 GITLAB_TOKEN = config[:gitlab][:token]
 MAIL_FROM = config[:mail][:from]
+MAIL_TO = config[:mail][:to]
 
 deli = config[:mail][:delivery]
 Mail.defaults do
@@ -43,11 +43,15 @@ def send_mail(push_body)
   mail_subject = "GitLab | #{project_name} | notify"
   mail_body = generate_mail_body(project_name, project_url, push_info)
 
-  # get team members
-  ignore_list = (params['ignore'] || '').split(',')
-  developers = Gitlab.team_members(project.id)
-    .reject { |user| ignore_list.include?(user.email) }
-    .map { |user| user.email }
+  if MAIL_TO.nil?
+    # get team members
+    ignore_list = (params['ignore'] || '').split(',')
+    developers = Gitlab.team_members(project.id)
+      .reject { |user| ignore_list.include?(user.email) }
+      .map { |user| user.email }
+  else
+    developers = MAIL_TO
+  end
 
   # send mail
   Mail.deliver do

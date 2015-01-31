@@ -1,0 +1,17 @@
+:mail:
+  :from: nobody@example.com
+  :to: optional-mailing-list-to@example.com
+  :delivery:
+    :method: :smtp
+    :options:
+      :enable_starttls_auto: true
+      :address: smtp.gmail.com
+      :port: 587
+      :domain: gmail.com
+      :authentication: :plain
+      :user_name: FIXME
+      :password: FIXME
+:gitlab:
+  :url: https://gitlab.example.com/
+  :token: ZZZZZZZZZZFIXMEZZZZZ
+
